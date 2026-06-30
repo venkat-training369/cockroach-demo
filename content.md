@@ -1,4 +1,4 @@
-## CockroachDB DBA Course
+## CockroachDB DBA Course ( 35 Days )
 
 ## Module 1: Introduction to CockroachDB
 
@@ -27,8 +27,6 @@
 * SQL Client
 * Three-Node Cluster
 * Cluster Verification
-* Podman Desktop / Docker Installation
-
 
 ---
 
@@ -45,7 +43,6 @@
 * Raft Consensus
 * Hands-On
      - Explore Internal metadata tables
-
 
 ---
 
@@ -112,17 +109,6 @@
   - User Management Lab
   - Security Configuration
 
-333333333333333## Module 6: Transactions & MVCC
-
-* ACID
-* Serializable Isolation
-* MVCC
-* Transaction Lifecycle
-* Read & Write Paths
-* Timestamp Ordering
-* Transaction Retries
-* Savepoints
-
 ---
 ## Module 7: Cluster Administration
 
@@ -139,6 +125,7 @@
 
 ## Module 8 : Performance Tuning
 
+* MVCC
 * EXPLAIN
 * EXPLAIN ANALYZE
 * Index Design
@@ -247,14 +234,14 @@
 
 ---
 
-## Module 17: CockroachDB Cloud
+## Module 17: CockroachDB Automation / CI-CD
 
-* Cluster Creation
-* Scaling
-* Backups
-* Monitoring
-* Security
-* Connectivity
+* Podman Desktop / Docker Installation
+  - Cluster Creation (Containers)
+  - Scaling
+* Deploying in Kubernetes 
+* IAC 
+    - Using Terraform Building CockroachDB Cluster
 
 ---
 
@@ -267,7 +254,8 @@
 
 ---
 
-## Module 20: DBA Interview & Real-Time Scenarios
+## Module 19 : DBA Interview & Real-Time Scenarios
+
 
 * Architecture Questions
 * Replication Scenarios
