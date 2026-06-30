@@ -112,6 +112,16 @@ cockroach cert create-node \
 ```
 
 ---
+What each parameter does
+localhost → Allows local connections using localhost.
+127.0.0.1 → Allows local connections using the loopback IP.
+$(hostname -f) → Uses the server's fully qualified domain name (FQDN).
+$(hostname -I | awk '{print $1}') → Uses the server's primary IP address.
+--certs-dir → Directory where the generated certificates are stored.
+--ca-key → Path to the CA private key used to sign the node certificate.
+---
+
+---
 
 #### Create Root Client Certificate
 
