@@ -85,7 +85,7 @@
   - Leader Election
 
 ---
-## Module 4: Database Administration
+## Module 6: Database Administration
 
 * Database Management
   - Create Databases
@@ -96,21 +96,21 @@
 
 * User Administration
 
- - Users
- - Roles
- - Grants
- - RBAC
+   - Users
+   - Roles
+   - Grants
+   - RBAC
 
 * Multi-Tenancy
 
- - Logical Separation
- - Tenant Architecture
- - Resource Isolation
+   - Logical Separation
+   - Tenant Architecture
+   - Resource Isolation
 
 * Hands-On
 
-- User Management Lab
-- Security Configuration
+  - User Management Lab
+  - Security Configuration
 
 333333333333333## Module 6: Transactions & MVCC
 
