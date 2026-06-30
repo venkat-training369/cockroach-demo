@@ -175,12 +175,22 @@ Generate the node certificate.
 
 ```bash
 cockroach cert create-node \
-    localhost \
-    127.0.0.1 \
-    $(hostname -f) \
-    $(hostname -I | awk '{print $1}') \
-    --certs-dir=/var/lib/cockroach/certs \
-    --ca-key=/var/lib/cockroach/my-safe-directory/ca.key
+  localhost \
+  127.0.0.1 \
+  <HOSTNAME> \
+  <HOST-ONLY-IP> \
+  <NAT-IP> \
+  --certs-dir=/var/lib/cockroach/certs \
+  --ca-key=/var/lib/cockroach/my-safe-directory/ca.key
+
+cockroach cert create-node \
+  localhost \
+  127.0.0.1 \
+  oel9-rand  \
+  10.10.10.14 \
+  192.168.235.240 \
+  --certs-dir=/var/lib/cockroach/certs \
+  --ca-key=/var/lib/cockroach/my-safe-directory/ca.key
 ```
 
 ### Parameter Description
