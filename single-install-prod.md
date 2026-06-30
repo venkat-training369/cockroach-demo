@@ -161,7 +161,7 @@ sudo firewall-cmd --reload
 Port usage:
 
 * 26257 = SQL
-* 8080 = Admin UI [\[mylinux.work\]](https://mylinux.work/guides/cockroachdb-setup/)
+* 8080 = Admin UI [\[hosthname:8080]](https//hostname(IPAddress):8080)
 
 ***
 
