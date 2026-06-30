@@ -79,10 +79,10 @@
   - Rebalancing 
 
 * Replication Internals
-* Replica Factor
-* Quorum
-* Failover Process
-* Leader Election
+  - Replica Factor
+  - Quorum
+  - Failover Process
+  - Leader Election
 
 ---
 
