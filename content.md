@@ -1,52 +1,66 @@
-## CockroachDB DBA Course ( 35 Days )
+# CockroachDB DBA Course (35 Days)
 
 ## Module 1: Introduction to CockroachDB
 
 * What is CockroachDB?
-* Why Distributed SQL?
-* SQL vs NoSQL vs Distributed SQL
+* Evolution of Databases
+* SQL vs NoSQL vs NewSQL (Distributed SQL)
+* Why CockroachDB?
 * CockroachDB Features
-* Use Cases
 * Editions (Core, Enterprise, Cloud)
+* Use Cases
+* Architecture Overview
 * Course Roadmap
 
 ---
 
-## Module 2: Installation & Environment Setup
+# Module 2: Installation & Environment Setup
 
 * Prerequisites
-* Oracle Linux Installation
-* Single-Node Cluster
+* Oracle Linux 9 Installation
+* Install CockroachDB
+* Single-Node Cluster (Insecure)
 * Secure vs Insecure Mode
-* Single-Node Cluster (Production method)
-  - CA Certificate Creation
-  - Node Certificates
-  - Client Certificates
-  - TLS Authentication
-* Web UI
+* TLS Certificate Architecture
+* Create CA Certificate
+* Create Node Certificate
+* Create Client Certificate
+* Start CockroachDB Service
+* Configure Systemd
+* Configure Firewall
+* DB Console
 * SQL Client
-* Three-Node Cluster
+* Three-Node Cluster Installation
 * Cluster Verification
 
 ---
 
-## Module 3: CockroachDB Architecture
+# Module 3: CockroachDB Architecture
 
 * Distributed SQL Architecture
-* Node & Cluster Architecture
-* Store
-* Key-Value(KV) Layer
+* Node Architecture
+* Cluster Architecture
+* Stores
+* Key-Value Layer
+* SQL Layer
+* DistSQL
 * Ranges
+* Range Splits
+* Range Merges
 * Replicas
-* Leaseholder
+* Leaseholders
 * Gossip Protocol
 * Raft Consensus
-* Hands-On
-     - Explore Internal metadata tables
+* Metadata Tables
+
+**Hands-on**
+
+* Explore Internal Metadata
+* Cluster Topology
 
 ---
 
-## Module 4: SQL Fundamentals
+# Module 4: SQL Fundamentals
 
 * Databases
 * Schemas
@@ -55,213 +69,344 @@
 * Constraints
 * Primary Keys
 * Secondary Indexes
+* Unique Indexes
+* Computed Columns
+* Sequences
+* Views
+* Transactions
+* ACID Properties
+* UPSERT
+* IMPORT
+* EXPORT
+
+---
+
+# Module 5: Distributed Storage Internals
+
+### Storage Engine
+
+* Pebble Storage Engine
+* SSTables
+* LSM Trees
+* MemTables
+* WAL
+* Write Path
+* Read Path
+
+### MVCC
+
+* MVCC Architecture
+* Version Storage
+* Garbage Collection
+* Closed Timestamps
+
+### Range Management
+
+* Range Splits
+* Range Merges
+* Lease Transfers
+* Automatic Rebalancing
+* Automatic Sharding
+
+### Replication Internals
+
+* Replica Factor
+* Quorum
+* Leader Election
+* Leaseholder Election
+* Failover
+* Replica Recovery
+
+---
+
+# Module 6: Database Administration
+
+### Database Objects
+
+* Databases
+* Schemas
+* Tables
+* Constraints
 * Sequences
 * Views
 
----
+### User Administration
 
-## Module 5: Distributed Storage Internals
+* Users
+* Roles
+* Role Hierarchy
+* Grants
+* Revokes
+* RBAC
+* Default Privileges
 
-* Storage Engine
-  - Pebble Storage Engine
-  - SSTables
-  - LSM Trees
-  - Write Path
-  - Read Path
+### Multi-Tenancy
 
-* Range Architecture
-  - Range Merging
-  - Lease Transfers
-  - Automatic Sharding
-  - Rebalancing 
+* Tenant Architecture
+* Logical Separation
+* Resource Isolation
 
-* Replication Internals
-  - Replica Factor
-  - Quorum
-  - Failover Process
-  - Leader Election
-
----
-## Module 6: Database Administration
-
-* Database Management
-  - Create Databases
-  - Create Schemas
-  - Create Tables
-  - Constraints
-  - Sequences
-
-* User Administration
-
-   - Users
-   - Roles
-   - Grants
-   - RBAC
-
-* Multi-Tenancy
-
-   - Logical Separation
-   - Tenant Architecture
-   - Resource Isolation
-
-* Hands-On
-
-  - User Management Lab
-  - Security Configuration
-
----
-## Module 7: Cluster Administration
+**Hands-on**
 
 * User Management
-* Roles
-* Permissions
-* Databases
-* Schemas
-* Cluster Settings
-* Node Management
-* Certificates
+* Database Administration
 
 ---
 
-## Module 8 : Performance Tuning
+# Module 7: Cluster Administration
 
-* MVCC
+* Cluster Initialization
+* Cluster Settings
+* Cluster Configuration
+* Node Management
+* Node Decommission
+* Node Recommission
+* Cluster Upgrade
+* Cluster Health
+* Licensing
+* Locality Configuration
+* Cluster Diagnostics
+
+---
+
+# Module 8: Performance Tuning
+
+* MVCC Performance
 * EXPLAIN
 * EXPLAIN ANALYZE
-* Index Design
+* Query Optimizer
 * Statistics
-* Query Optimization
-* Hotspots
-* Vectorized Execution
+* Cost-Based Optimization
+* Query Plans
+* Index Design
 * Session Settings
+* Vectorized Execution
+* Statement Diagnostics
+* SQL Activity
+* Hotspots
+* Contention Analysis
+
 ---
 
-## Module 9: Backup & Restore
+# Module 9: Backup & Restore
 
-* Full Backup
+* BACKUP
+* BACKUP INTO
 * Incremental Backup
-* Restore
+* RESTORE
 * Scheduled Backups
 * Cloud Storage Backups
+* Backup Encryption
 * Disaster Recovery
-
----
-
-## Module 10: Monitoring & Observability
-
-* DB Console
-* Metrics
-* Prometheus
-* Grafana
-* Logs
-* Health Checks
-* Alerts
-* Capacity Monitoring
-
----
-
-## Module 11: High Availability & Replication
-
-* Replication
-* Quorum
-* Leaseholder
-* Node Failure
-* Replica Recovery
-* Rebalancing
-* Zone Configuration
-* Locality
-
----
-
-## Module 12: Scaling CockroachDB
-
-* Horizontal Scaling
-* Adding Nodes
-* Removing Nodes
-* Automatic Rebalancing
-* Capacity Planning
-* Rolling Upgrades
-
----
-
-## Module 13: Multi-Region Deployment (AWS or GCP)
-
-* Locality
-* Regions
-* Zones
-* Survival Goals
-* Geo-Partitioning
-* Global Tables
-* Latency Optimization
-
----
-
-## Module 14: Security
-
-* Certificates
-* TLS
-* Authentication
-* Authorization
-* Encryption at Rest
-* Audit Logs
-* Password Policies
-
----
-
-## Module 15: Troubleshooting
-
-* Node Down
-* Disk Full
-* High CPU
-* High Latency
-* Hot Ranges
-* Leaseholder Imbalance
-* Replica Issues
-* Network Partition
-* Slow Queries
-
----
-
-## Module 16: Production Best Practices
-
-* Cluster Sizing
-* Hardware Recommendations
-* Backup Strategy
-* Upgrade Strategy
-* Maintenance Windows
-* Monitoring Checklist
-* Security Checklist
-
----
-
-## Module 17: CockroachDB Automation / CI-CD
-
-* Podman Desktop / Docker Installation
-  - Cluster Creation (Containers)
-  - Scaling
-* Deploying in Kubernetes 
-* IAC 
-    - Using Terraform Building CockroachDB Cluster
-
----
-
-## Module 18: Migration to CockroachDB
-
-* PostgreSQL to CockroachDB
-* Schema Migration
-* Data Migration
 * Validation
 
 ---
 
-## Module 19 : DBA Interview & Real-Time Scenarios
+# Module 10: Monitoring & Observability
 
+* DB Console
+* Metrics
+* Logs
+* Health Checks
+* Events
+* Prometheus
+* Grafana
+* Alerting
+* Capacity Monitoring
+* SQL Activity
+* Slow Queries
+* crdb_internal Tables
 
-* Architecture Questions
-* Replication Scenarios
-* Performance Scenarios
-* High Availability Questions
-* Troubleshooting Scenarios
-* Production Case Studies
+---
 
+# Module 11: High Availability & Replication
 
+* Replication
+* Replica Placement
+* Quorum
+* Leaseholders
+* Lease Transfer
+* Node Failure
+* Replica Recovery
+* Rebalancing
+* Network Partition
+* Locality
+* Zone Configurations
+* Failover Demonstration
+
+---
+
+# Module 12: Scaling CockroachDB
+
+* Horizontal Scaling
+* Vertical Scaling
+* Adding Nodes
+* Removing Nodes
+* Automatic Rebalancing
+* Capacity Planning
+* Cluster Expansion
+* Rolling Upgrades
+* Online Scaling
+
+---
+
+# Module 13: Multi-Region Deployment
+
+* Localities
+* Regions
+* Zones
+* Survival Goals
+* REGIONAL BY ROW
+* REGIONAL BY TABLE
+* GLOBAL Tables
+* Geo-Partitioning
+* Multi-Region SQL
+* Latency Optimization
+
+---
+
+# Module 14: Security
+
+* Authentication
+* Authorization
+* TLS Certificates
+* Certificate Rotation
+* Certificate Renewal
+* SQL Users
+* Password Policies
+* RBAC
+* Encryption in Transit
+* Encryption at Rest
+* Audit Logs
+* Security Best Practices
+
+---
+
+# Module 15: Troubleshooting
+
+* Node Down
+* Cluster Down
+* Disk Full
+* High CPU
+* High Memory
+* High Latency
+* Slow Queries
+* Hot Ranges
+* Leaseholder Imbalance
+* Replica Problems
+* Clock Skew
+* Certificate Expiry
+* Network Partition
+* Backup Failures
+* SQL Connection Problems
+
+---
+
+# Module 16: Production Best Practices
+
+* Production Architecture
+* Hardware Sizing
+* CPU Recommendations
+* Memory Recommendations
+* Storage Recommendations
+* Filesystem Recommendations
+* Backup Strategy
+* Monitoring Strategy
+* Security Checklist
+* Upgrade Strategy
+* Maintenance Windows
+* Disaster Recovery Planning
+
+---
+
+# Module 17: Automation & Kubernetes
+
+### Containers
+
+* Docker
+* Podman Desktop
+
+### Kubernetes
+
+* StatefulSets
+* Persistent Volumes
+* Storage Classes
+* Scaling
+* Rolling Updates
+
+### Infrastructure as Code
+
+* Terraform
+* Ansible (Overview)
+
+### CI/CD
+
+* GitHub Actions
+* Kubernetes Deployment Automation
+
+---
+
+# Module 18: Migration to CockroachDB
+
+* PostgreSQL Compatibility
+* Schema Migration
+* Data Migration
+* Validation
+* Cutover Strategy
+* Rollback Strategy
+* Migration Best Practices
+
+---
+
+# Module 19: Enterprise Features
+
+* Enterprise Licensing
+* Scheduled Backups
+* Changefeeds
+* Row-Level TTL
+* Multi-Region Enterprise Features
+* Backup to Cloud Storage
+* Enterprise Security Features
+
+---
+
+# Module 20: DBA Interview Questions & Real-Time Scenarios
+
+### Architecture Scenarios
+
+* Cluster Design
+* Range Distribution
+* Leaseholder Placement
+
+### High Availability Scenarios
+
+* Node Failure
+* Quorum Loss
+* Network Partition
+* Failover
+
+### Performance Scenarios
+
+* Slow Queries
+* High CPU
+* Hotspots
+* Contention
+
+### Administration Scenarios
+
+* Backup Failures
+* Certificate Expiry
+* Cluster Upgrade
+* Node Replacement
+
+### Production Case Studies
+
+* Banking
+* E-Commerce
+* SaaS
+* Financial Services
+* Multi-Region Deployments
+
+---
+
+#at production DBAs and SREs are expected to know.
