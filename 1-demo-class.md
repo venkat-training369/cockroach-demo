@@ -299,9 +299,15 @@ Anyone familiar with PostgreSQL can start working with CockroachDB quickly.
 
 ---
 
-## Industries Using CockroachDB
+## Use Cases - Industries Using CockroachDB
 
 * Banking
+  - **Core Banking Systems:** Store customer accounts, balances, and transactions with strong ACID consistency across multiple regions.
+  - **Real-Time Payments:** Handle high-volume payment processing, fund transfers, and transaction validation with low latency.
+  - **Fraud Detection:** Maintain real-time transaction data for detecting suspicious activities and enforcing security rules.
+  - **Multi-Region Banking:** Provide high availability and disaster recovery by replicating data across multiple data centers.
+  - ***Digital Banking Applications:** Support online banking, mobile apps, and APIs requiring scalability and always-on availability.
+
 * FinTech
 * E-commerce
 * Healthcare
