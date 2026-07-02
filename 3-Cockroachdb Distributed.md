@@ -1,6 +1,8 @@
-## Module 3: CockroachDB Architecture 
+## Module 3: Cockroachdb Distributed Architecture
 
-**Setup context:** `node1` (`oel9-n1`) is currently running as a `start-single-node` instance. `node2` and `node3` will join later to form a proper 3-node cluster. This doc has concept notes + verification commands you can run **now on node1 alone**, and a separate section of commands to run **after node2/node3 join**.
+**Now** `node1` (`oel9-n1`) is currently running as a `start-single-node` instance. `node2` (`oel9-n2`) and `node3` (`oel9-n3`) will join later to form a proper **3-node cluster**. 
+
+This module 3 + verification commands you can run **now on node1 alone** (`oel9-n1`), and a we will have separate section of commands to run **after node2/node3 join**.
 
 ---
 
@@ -8,11 +10,13 @@
 
 CockroachDB is a distributed SQL database: data is automatically split, replicated, and distributed across nodes, but presents a single logical SQL interface to clients (like talking to one big Postgres-compatible database).
 
-Key idea: **any node can serve any query** — there's no single "master" node for reads/writes. A client can connect to any node, and that node coordinates with others (via KV layer + Raft) to fetch/write data, regardless of where the data physically lives.
+There is no dedicated master node that all clients must connect to. Every CockroachDB node can act as a gateway node. Clients may connect to any node in the cluster, and that node automatically coordinates with the KV layer, leaseholders, and the Raft protocol to locate the required data and execute the request. This happens regardless of which node physically stores the data, making the cluster appear as a single logical database to applications.
+
+
 
 Layers (top to bottom):
 ```
-SQL Layer        <- parses/plans/executes SQL, talks to KV via SQL-to-KV mapping
+SQL Layer        <- parses/plans/executes SQL, talks to KV via SQL-to-KV (Key-Value) mapping
 Transaction Layer <- ACID guarantees, MVCC, timestamps
 Distribution Layer (DistSender) <- routes KV requests to the right range/replica
 Replication Layer <- Raft consensus across replicas
@@ -26,6 +30,43 @@ Storage Layer     <- Pebble (LSM-tree) key-value storage engine on disk
 + Writes data safely to storage.
 + Returns **Success**.
 
+```bash              
+                Client / Application
+                        │
+                        ▼
+                  SQL Layer
+         (Parser, Optimizer, Executor)
+                        │
+                        ▼
+              Transaction Layer
+       (ACID, MVCC, Timestamp Management)
+                        │
+                        ▼
+      Distribution Layer (DistSender)
+   (Range Lookup, Leaseholder Routing)
+                        │
+                        ▼
+          Replication Layer (Raft)
+ (Consensus, Replication, Leader Election)
+                        │
+                        ▼
+             Storage Layer (Pebble)
+   (WAL, MemTable, SSTables, LSM Tree)
+                        │
+                        ▼
+               Physical Disk
+```
+
+---
+### **Key Components**
+| Component  | Description |
+|------------|------------|
+| **Nodes**  | Independent servers running CockroachDB. |
+| **Ranges** | Data is split into **512 MiB** chunks (**ranges**) for distribution. |
+| **Leases** | Each range has a **leaseholder node** that coordinates reads/writes. |
+| **Replicas** | Each range is replicated across multiple nodes for fault tolerance. |
+| **KV Store** | Data is stored as key-value pairs but accessed via SQL. |
+---
 ## 2. Node Architecture
 
 A **node** = one running `cockroach` process (one OS process per machine/VM, usually).
@@ -34,7 +75,7 @@ Each node contains:
 - One or more **stores** (each store = one directory/disk, backed by Pebble)
 - A **KV server** (handles Raft, range routing)
 - A **SQL server / gateway** (accepts client SQL connections)
-- Internal gossip client (talks to other nodes)
+- Internal gossip client (talks(communicates) to other nodes like Node2 and Nod3)
 
 A node is identified by a **Node ID** (integer, assigned on first join, permanent for that node's lifetime).
 
@@ -81,70 +122,6 @@ cockroach node status --certs-dir=/var/lib/cockroach/certs --host=localhost
 
 ---
 
-## 3.5 System Databases and System Tables (foundation before Stores)
-
-### System Databases
-Every CockroachDB cluster ships with these built-in databases:
-
-| Database | Purpose |
-|---|---|
-| `system` | Cluster metadata — node info, ranges, jobs, users, zones, settings, etc. |
-| `defaultdb` | Empty default database, given to new sessions if none specified |
-| `postgres` | Empty, exists for Postgres-compatibility/tooling that expects it |
-| `crdb_internal` | Not a real database — a **virtual schema** exposing live introspection views (ranges, gossip, sessions, etc.) |
-
-```sql
-SHOW DATABASES;
-```
-
-### Key Tables in `system` (persisted metadata)
-
-| Table | What it holds |
-|---|---|
-| `system.namespace` | Maps names → IDs for databases/tables/schemas |
-| `system.descriptor` | Full schema descriptors (table/db/type definitions) |
-| `system.zones` | Zone configs (replication factor, GC TTL, constraints) per range/table/db |
-| `system.jobs` | Backup, restore, schema-change, import job history/status |
-| `system.users` | SQL users and roles |
-| `system.role_members` | Role membership mappings |
-| `system.settings` | Persisted cluster settings |
-| `system.lease` | Table schema leases (used for online schema changes) |
-| `system.eventlog` | Cluster event history (DDL, node join/decommission, etc.) |
-| `system.rangelog` | History of range splits/merges/lease changes |
-| `system.web_sessions` | Admin UI login sessions |
-| `system.sqlliveness` | SQL instance liveness (multi-tenant/serverless internals) |
-| `system.replication_stats` / `system.reports_meta` | Replication health reporting (used by Admin UI) |
-
-```sql
-SHOW TABLES FROM system;
-
-SELECT * FROM system.namespace LIMIT 20;
-SELECT * FROM system.zones LIMIT 20;
-SELECT * FROM system.jobs ORDER BY created DESC LIMIT 10;
-SELECT * FROM system.eventlog ORDER BY timestamp DESC LIMIT 10;
-SELECT * FROM system.rangelog ORDER BY timestamp DESC LIMIT 10;
-```
-
-### `crdb_internal` — live introspection (virtual, not persisted tables)
-
-This is the source of the range/store/gossip queries used throughout this doc.
-
-```sql
-SHOW TABLES FROM crdb_internal;
-```
-
-Notable views:
-- `crdb_internal.ranges` — range-to-replica-to-leaseholder mapping
-- `crdb_internal.kv_store_status` — feeds store-level/disk-level info (used in Section 4 below)
-- `crdb_internal.gossip_nodes`, `crdb_internal.gossip_liveness` — gossip/node liveness
-- `crdb_internal.cluster_settings` — active cluster settings
-- `crdb_internal.node_build_info` — version/build per node
-- `crdb_internal.tables` — every table in the cluster, with size/schema info
-
-**Data flow to remember:** `system.*` tables (persisted, written by CockroachDB itself) → `crdb_internal.*` views (live, computed introspection) → physical store/disk-level commands (Section 4) pull the same data at the storage layer.
-
----
-
 ## 4. Stores
 
 A **store** = one storage directory on disk, mapped to a single physical disk in production (avoid multiple stores on the same disk). Configured via `--store=path` at startup (can specify multiple `--store` flags for multiple disks per node).
@@ -172,7 +149,7 @@ cockroach sql --certs-dir=/var/lib/cockroach/certs --host=localhost \
 
 ## 5. Key-Value (KV) Layer
 
-Underneath SQL, everything is stored as ordered key-value pairs. SQL tables/indexes/rows are encoded into keys (table ID + index ID + primary key values) and values (encoded column data). This is what lets CockroachDB shard/distribute/replicate data generically, without knowing "SQL semantics" at that layer.
+When you create a table and insert data, you see rows and columns, but CockroachDB stores the data differently behind the scenes. It converts every row into a key-value pair and keeps the keys in sorted order. This makes it easy to split, distribute, and replicate data across multiple nodes. The storage layer doesn't know anything about SQL tables or columns; it simply stores and retrieves key-value pairs. The SQL layer acts as a translator between the SQL commands you write and the key-value data stored on disk.
 
 ### Command to see KV encoding conceptually
 ```bash
@@ -432,7 +409,7 @@ cockroach node status --certs-dir=/var/lib/cockroach/certs --host=localhost
 
 ---
 
-## One-Line Cheat Sheet
+## Easy Cheat Sheet
 
 | Concept | Fast check |
 |---|---|
